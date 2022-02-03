@@ -1,5 +1,26 @@
 const express = require('express');
 const app = express();
+const path = require('path')
+
 const bodyParser = require("body-parser");
-const expressHandlebars = require('express-handlebars');
+app.use(bodyParser.urlencoded({extended: true}))
+
+var mysql = require('mysql');
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "qwerty",
+    database: "joga_mysql"
+});
+
+con.connect(function (err)  {
+    if(err) throw err;
+    console.log("Connected to joga_mysql db")
+})
+
+app.listen(3000, () =>{
+    console.log('App is started at http://localhost:3000');
+})
+
+
 
