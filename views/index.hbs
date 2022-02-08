@@ -1,4 +1,4 @@
-<h1>HOmepage</h1>
+<h1>Homepage</h1>
 
 <div class="article-list">
     {{#articles}}
@@ -8,4 +8,20 @@
             <h2><a href="/article/{{slug}}">{{name}}</a></h2>
         </article>
     {{/articles}}
+</div>
+
+
+<div class="author-page">
+    {{#authors}}
+        <author>
+            <a href="/author/:id">alt=""></a>
+        </author>
+    {{#articles}}
+        <article>
+            <a href="/article/{{slug}}"><img src="/images/{{image}}"
+                                             alt=""></a>
+            <h2><a href="/article/{{slug}}">{{name}}</a></h2>
+        </article>
+    {{/articles}}
+    {{/authors}}
 </div>
