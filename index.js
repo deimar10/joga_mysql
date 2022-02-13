@@ -17,8 +17,8 @@ app.use(express.static('public'));
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}))
 
-var mysql = require('mysql');
-var con = mysql.createConnection({
+const mysql = require('mysql');
+const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "qwerty",
@@ -29,6 +29,8 @@ con.connect(function (err)  {
     if(err) throw err;
     console.log("Connected to joga_mysql db")
 })
+
+
 
 // show
 app.get('/', (req, res) => {
@@ -58,6 +60,30 @@ app.get('/article/:slug', (req, res) => {
         })
     })
 });
+
+//show authors articles
+app.get('/author/:id', (req, res) => {
+    let query = `SELECT id, name FROM author WHERE id="${req.params.id}"`
+    let query1 = `SELECT * FROM article WHERE author_id="${req.params.id}"`
+    console.log(query1)
+    let author
+    con.query(query, (err, result) => {
+        if (err) throw err;
+        author = result
+        console.log(author)
+        let articles
+        con.query(query1, (err, result) => {
+            if (err) throw err;
+            articles = result
+            res.render('author', {
+                author: author,
+                articles: articles
+            })
+        })
+
+    })
+});
+
 
 app.listen(3000, () =>{
     console.log('App is started at http://localhost:3000');
