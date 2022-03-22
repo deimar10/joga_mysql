@@ -1,10 +1,13 @@
+
+// import database connection
+const con = require('../utils/db');
 // show all articles - index page
-const getAllArtticles = (req, res) => {
+const getAllArticles = (req, res) => {
     let query = "SELECT * FROM article";
     let articles = []
     con.query(query, (err, result) => {
         if (err) throw err;
-        articles = result
+        articles = result;
         res.render('index', {
             articles: articles
         })
@@ -13,7 +16,7 @@ const getAllArtticles = (req, res) => {
 
 //show article by this slug
 const getArticleBySlug = (req, res) => {
-    let query = `SELECT *, article.name as article_name, auhtor.name as author_name FROM article INNER JOIN author ON author.id = article.author_id WHERE slug="${req.parms.slug}"`
+    let query = `SELECT *, article.name as article_name, author.name as author_name FROM article INNER JOIN author ON author.id = article.author_id WHERE slug="${req.params.slug}"`
     let article
     con.query(query, (err, result) => {
         if (err) throw err;
@@ -24,3 +27,11 @@ const getArticleBySlug = (req, res) => {
         })
     });
 };
+
+//export controller function
+module.exports = {
+    getAllArticles,
+    getArticleBySlug
+};
+
+

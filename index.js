@@ -17,73 +17,18 @@ app.use(express.static('public'));
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}))
 
-const mysql = require('mysql');
-const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "qwerty",
-    database: "joga_mysql"
-});
+//import article route
+const articleRoutes = require('./routes/article');
 
-con.connect(function (err)  {
-    if(err) throw err;
-    console.log("Connected to joga_mysql db")
-})
+//import author route
+const authorRoutes = require('./routes/author');
 
+// to use article routes
+app.use('/', articleRoutes);
+app.use('/article', articleRoutes)
 
-
-// show
-app.get('/', (req, res) => {
-    let query = "SELECT * FROM article";
-    let articles = []
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        articles = result
-        console.log(result)
-        res.render('index',{
-        articles: articles
-        })
-    })
-});
-
-//show article by this slug
-app.get('/article/:slug', (req, res) => {
-    //let query = `SELECT * FROM article WHERE slug="${req.params.slug}"`
-    let query = `SELECT *, author.name as author_name, article.name as article_name FROM author INNER JOIN article ON author.id = article.author_id WHERE slug="${req.params.slug}"`
-    let article
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        article = result
-        console.log(article)
-        res.render('article', {
-            article: article
-        })
-    })
-});
-
-//show authors articles
-app.get('/author/:id', (req, res) => {
-    let query = `SELECT id, name FROM author WHERE id="${req.params.id}"`
-    let query1 = `SELECT * FROM article WHERE author_id="${req.params.id}"`
-    console.log(query1)
-    let author
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        author = result
-        console.log(author)
-        let articles
-        con.query(query1, (err, result) => {
-            if (err) throw err;
-            articles = result
-            res.render('author', {
-                author: author,
-                articles: articles
-            })
-        })
-
-    })
-});
-
+// to use author routes
+app.use('/author', authorRoutes)
 
 app.listen(3000, () =>{
     console.log('App is started at http://localhost:3000');
